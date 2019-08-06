@@ -9,40 +9,60 @@
 # more shops
 
 
+# how do we lay this out
+# class SearchQ
+# supermarket Class where the parameters you pass are the shopping centres you want to search 
+# class Product(name) 
+
 from bs4 import BeautifulSoup
 import requests
 
-product_name = []
-prices = []
-
-search_token = input("What item would you like to search the Tesco website?: \n").replace(" ", "%20")
 
 
+class Tesco():
 
-url = "https://www.tesco.com/groceries/en-GB/search?query=" + search_token
+	sub_url = "https://www.tesco.com/groceries/en-GB/search?query="
 
-# parse webpage with search token
-source = requests.get(url).text
-soup = BeautifulSoup(source, 'lxml')
+	def __init__(self, product_name):
 
-# find price per quantity weight and item name for each element on the webpage
-prices_soup = soup.find_all('div', class_="price-per-quantity-weight")
-product_names_soup = soup.find_all('a', class_="sc-htoDjs kRdgZa")
+		self.product_name = product_name
 
-# convert html element to text
-for item in product_names_soup:
-	product_name.append(str(item.text))
-for item in prices_soup:
-	prices.append(str(item.text))
+	def get_product_info():
 
-# change everything to price per kg. if it's in per 100g, multiple it by 10. 
+		search_token = product_name.replace(" ", "%20")
+		url = sub_url+search_token
+		# parse webpage with search token
+		source = requests.get(url).text
+		soup = BeautifulSoup(source, 'lxml')
 
-# need to use regex to ensure that all of the values are in /kg from the beginning instead of doing some text processing bs before the print statment 
+		# find price per quantity weight and item name for each element on the webpage
+		prices_soup = soup.find_all('div', class_="price-per-quantity-weight")
+		product_names_soup = soup.find_all('a', class_="sc-htoDjs kRdgZa")
 
-# combine product name and price into a dict
-products_dict = dict(zip(product_name, prices))
+		# convert html element to text
+		for item in product_names_soup:
+			product_name.append(str(item.text))
+		for item in prices_soup:
+			prices.append(str(item.text))
 
-for i in products_dict:
-	print(i + ": " + products_dict[i])
+		# change everything to price per kg. if it's in per 100g, multiple it by 10. 
+
+		# need to use regex to ensure that all of the values are in /kg from the beginning instead of doing some text processing bs before the print statment 
+
+		# combine product name and price into a dict
+		products_dict = dict(zip(product_name, prices))
+
+		for i in products_dict:
+			print(i + ": " + products_dict[i])
+
+
+search_query = input("What would you like to search? \n")
+
+search_initialisation = Tesco(search_query)
+
+Tesco.get_product_info()
+
+
+	
 
 
