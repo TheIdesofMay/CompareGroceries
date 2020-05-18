@@ -1,2 +1,2 @@
 # CompareGroceries
- Web-scraper which compares groceries of your choice 
+ A simple web-scaping exercise for comparing groceries.
